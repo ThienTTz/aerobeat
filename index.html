@@ -156,21 +156,26 @@
   try {
     const snap = await getDocs(collection(db, "tracks"));
 
-   snap.forEach(doc => {
+  snap.forEach(doc => {
   const d = doc.data();
+
+  // bỏ qua document thiếu dữ liệu
+  if (!d.Title || !d.URL) return;
 
   const div = document.createElement("div");
   div.style.border = "1px solid #ddd";
   div.style.padding = "12px";
   div.style.marginBottom = "12px";
   div.style.maxWidth = "400px";
+  div.style.borderRadius = "12px";
 
   div.innerHTML = `
-    <img src="${d.Cover}" 
-         style="width:100%;border-radius:8px;margin-bottom:8px" />
+    <img src="${d.Cover || ""}" 
+         style="width:100%;border-radius:8px;margin-bottom:8px"
+         onerror="this.style.display='none'" />
 
     <h3 style="margin:4px 0">${d.Title}</h3>
-    <div>${d.Artist} • ${d.BaseBPM} BPM</div>
+    <div>${d.Artist || ""} • ${d.BaseBPM || "?"} BPM</div>
 
     <audio controls style="width:100%;margin-top:6px">
       <source src="${d.URL}" type="audio/mpeg">
