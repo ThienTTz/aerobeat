@@ -156,15 +156,30 @@
   try {
     const snap = await getDocs(collection(db, "tracks"));
 
-    snap.forEach(doc => {
-      const d = doc.data();
-      const div = document.createElement("div");
-      div.innerHTML = `
-        <b>${d.Title || ""}</b> – ${d.Artist || ""} (${d.BaseBPM || ""} BPM)
-        <hr/>
-      `;
-      container.appendChild(div);
-    });
+   snap.forEach(doc => {
+  const d = doc.data();
+
+  const div = document.createElement("div");
+  div.style.border = "1px solid #ddd";
+  div.style.padding = "12px";
+  div.style.marginBottom = "12px";
+  div.style.maxWidth = "400px";
+
+  div.innerHTML = `
+    <img src="${d.Cover}" 
+         style="width:100%;border-radius:8px;margin-bottom:8px" />
+
+    <h3 style="margin:4px 0">${d.Title}</h3>
+    <div>${d.Artist} • ${d.BaseBPM} BPM</div>
+
+    <audio controls style="width:100%;margin-top:6px">
+      <source src="${d.URL}" type="audio/mpeg">
+    </audio>
+  `;
+
+  container.appendChild(div);
+});
+
 
     if (snap.empty) {
       container.innerHTML = "<i>Không có dữ liệu tracks</i>";
